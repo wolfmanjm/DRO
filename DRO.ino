@@ -1,13 +1,19 @@
 
 // DRO.ino
+//#define ENCODER_OPTIMIZE_INTERRUPTS
+#include <Encoder.h>
 
 #include "utility/twi.h"
 #include "Wire.h"
 
 #include "LCDSmoothiePanel.h"
 
+
+
 #define LE_ENCA 2
 #define LE_ENCB 3
+
+Encoder lme(LE_ENCA, LE_ENCB);
 
 int readEncoderDelta(char &old_AB)
 {
@@ -18,7 +24,6 @@ int readEncoderDelta(char &old_AB)
     state = enc_states[(old_AB & 0x0f)];
     return state;
 }
-
 
 void setup()
 {
@@ -48,7 +53,9 @@ void loop()
     // }
     // Wire.endTransmission();
 
-    pos += readEncoderDelta(enc1);
+    // pos += readEncoderDelta(enc1);
+    pos= lme.read();
+
     if(pos != lastpos && millis() > lt1) {
         //Serial.println(pos);
         //lcd_setCursor(0, 1);
@@ -60,14 +67,15 @@ void loop()
         lcd_setCursor(0, 2);
         lcd_printf("%5ld.%04ld mm", p/1000, abs(p%1000));
         lastpos = pos;
-        lt1 = millis() + 1000;
+        lt1 = millis() + 100;
     }
 
     if(millis() > lt2) {
         // read buttons
         uint8_t b= lcd_readButtons();
         if(b & BUTTON_LEFT) {
-            pos= 0;
+            //pos= 0;
+            lme.write(0);
         }
         lt2= millis() + 200;
     }
