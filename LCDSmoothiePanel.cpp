@@ -497,17 +497,13 @@ void lcd_print(const char* line) {
 void lcd_clear()
 {
     command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
-//#ifndef USE_FASTMODE
-//    wait_ms(50);  // this command takes a long time!
-//#endif
+	wait_ms(100);  // this command takes a long time!
 }
 
 void lcd_home()
 {
     command(LCD_RETURNHOME);  // set cursor position to zero
-//#ifndef USE_FASTMODE
-//    wait_us(2000);  // this command takes a long time!
-//#endif
+    wait_ms(2);  // this command takes a long time!
 }
 
 void lcd_setCursor(uint8_t col, uint8_t row)
