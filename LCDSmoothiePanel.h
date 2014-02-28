@@ -17,5 +17,5 @@ int lcd_printf(const char* format, ...);
 void lcd_setCursor(uint8_t col, uint8_t row);
 uint8_t lcd_readButtons(void) ;
 void lcd_clear();
-
+void lcd_led(int);
 #endif

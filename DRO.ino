@@ -34,14 +34,8 @@ void clear() {
 
 void setup()
 {
-    //Serial.begin(115200);
-    pinMode(LE_ENCA, INPUT);
-    pinMode(LE_ENCB, INPUT);
-
     lcd_init();
     clear();
-
-    //Wire.begin();
 }
 
 long pos = 0;
@@ -55,21 +49,12 @@ bool display= true;
 void loop()
 {
     char buf[10];
-    // Wire.beginTransmission(0x20);
-    // for (int i = 0; i < 10; ++i) {
-    //    Wire.write((uint8_t)i);
-    // }
-    // Wire.endTransmission();
 
-    // pos += readEncoderDelta(enc1);
     pos= lme.read();
 
     if(display || (pos != lastpos && millis() > lt1)) {
-        //Serial.println(pos);
-        //lcd_setCursor(0, 1);
-        //lcd_printf("%10.3f", pos);
-        //lcd_print("               ");
-        long p= pos * 25; // seems one step is 25um not 15um
+
+        long p= pos * 15; // one step is 15um with the correct mag strip
         lcd_setCursor(0, 1);
         if(inches){
             long thou= round(p*umperthou);
@@ -81,6 +66,9 @@ void loop()
             lcd_setCursor(0, 2);
             lcd_printf("%6ld.%03ld mm", p/1000, abs(p%1000));
         }
+        lcd_setCursor(0, 3);
+        lcd_printf("%10ld", pos);
+
         lastpos = pos;
         lt1 = millis() + 100;
         display= false;
@@ -98,6 +86,7 @@ void loop()
             inches= !inches;
             clear();
             display= true;
+            lcd_led(inches?2:0);
         }
         lt2= millis() + 200;
     }

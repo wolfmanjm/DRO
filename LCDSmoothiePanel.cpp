@@ -434,12 +434,17 @@ void lcd_init() {
 	pca9634_init(0);
 
     setBacklightColor(255, 255, 255);
-    setPlayLED(255);
-    setBackLED(128);
+    setPlayLED(0);
+    setBackLED(0);
 
     pca9505_write(0, 0x18, 0xAA); // enable leds for button/led wing on port0
     pca9505_write(0, 0x08, 0x01); // enable leds for button/led wing on port0
 
+}
+
+void lcd_led(int ledmask) {
+    if(ledmask & 1) setBackLED(255); else setBackLED(0);
+    if(ledmask & 2) setPlayLED(255); else setPlayLED(0);
 }
 
 // cycle the buzzer pin at a certain frequency (hz) for a certain duration (ms)
